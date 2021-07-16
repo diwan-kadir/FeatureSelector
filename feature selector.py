@@ -26,28 +26,68 @@ def read_path(path,m=0,n=-1):
     '''
     Read path of csv file and return the Dataframe of X and y (Independent and Dependent Variables).
     
-    Note : 0 indexing considered
+    Note : 0 indexing considered.
     
-    Arguments:
-        path -- absolute path of the csv file.
-        m -- Starting column number (index included) 
-        n  -- Ending column number (index not included)
-        
-        eg. 
-        (['a','b','c','d','e','f'])
+    Parameters
+    ----------
+    path : String
+        absolute path of the csv file.
+    m : Integer, optional
+        Starting column number (index included). The default is 0.
+    n : Integer, optional
+        Ending column number (index not included). The default is -1.
+
+    Returns
+    -------
+    X : DataFrame
+        Independent Variable.
+    y : DataFrame
+        Dependent Variable.
+
+
+    Example
+    -------
+    Input :
+        (['a','b','c','d','e','f','Output'])
         for m = 1 , n = 5
-        
+    Output :
         X => ['b','c','d','e']
-   
+        y => ['Output']
+        
     '''
-    
+
     df = pd.read_csv(path)
     assert n < df.shape[1], 'n out of bounds \n\t\t\t i.e n exceeded number of columns'
         
     return df.iloc[:,m:n],df.iloc[:,-1]
 
-
 def indexes(X,ar):
+    '''
+    
+    Slices Dataframe Given as per given indexed Boolean Dataframe.
+    
+    Parameters
+    ----------
+    X : DataFrame
+        Dependent Variables with column names
+    ar : DataFrame of Boolean
+        Array of Boolean indicating Attributes to be selected or sliced.
+
+    Returns
+    -------
+    X : Datframe.
+        Dependent Variable after slicing of False indexes.
+    
+    Example    
+    -------
+    Input : 
+        X = ['A','B','C','D','E','F','G','H']
+        ar = [True, False,True, False,True, False,True, False]
+        
+    Output :
+        ['A','C','E','G']
+
+    '''
     index_array = []
     c = 0
     for i in list(ar[0]):
@@ -57,13 +97,27 @@ def indexes(X,ar):
     # print(index_array)
     return X.iloc[:,index_array]
 
-X,y = read_path('D:\Internship\dataset.csv')
-columns = pd.DataFrame(list(X.columns))
+def forward_selection(data, target, significance_level=0.05):
+    data_replica = data
+    initial_features = data.columns.tolist()
+    best_features = []
+    while (len(initial_features)>0):
+        remaining_features = list(set(initial_features)-set(best_features))
+        new_pval = pd.Series(index=remaining_features,dtype=float)
+        for new_column in remaining_features:
+            model = sm.OLS(target, sm.add_constant(data[best_features+[new_column]])).fit()
+            new_pval[new_column] = model.pvalues[new_column]
+        min_p_value = new_pval.min()
+        if(min_p_value<significance_level):
+            best_features.append(new_pval.idxmin())
+        else:
+            break
+    data = list(data)
+    for i in range(len(data)):
+        if data[i] in best_features:
+            data[i] = True
+        else :
+            data[i] = False
+    return indexes(data_replica, pd.DataFrame(data))
 
-forward_selection = pd.DataFrame(forward_selection(X, y))
-X0 = indexes(X,forward_selection)
 
-d = int(X0.shape[1]*0.80)
-
-chi_square = pd.DataFrame(SelectKBest(score_func=chi2 , k=d).fit(X0,y).get_support())
-X1 = indexes(X0,chi_square)
