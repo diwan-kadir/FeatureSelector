@@ -46,3 +46,24 @@ def read_path(path,m=0,n=-1):
         
     return df.iloc[:,m:n],df.iloc[:,-1]
 
+
+def indexes(X,ar):
+    index_array = []
+    c = 0
+    for i in list(ar[0]):
+        if i == True:
+            index_array.append(c)
+        c+=1
+    # print(index_array)
+    return X.iloc[:,index_array]
+
+X,y = read_path('D:\Internship\dataset.csv')
+columns = pd.DataFrame(list(X.columns))
+
+forward_selection = pd.DataFrame(forward_selection(X, y))
+X0 = indexes(X,forward_selection)
+
+d = int(X0.shape[1]*0.80)
+
+chi_square = pd.DataFrame(SelectKBest(score_func=chi2 , k=d).fit(X0,y).get_support())
+X1 = indexes(X0,chi_square)
