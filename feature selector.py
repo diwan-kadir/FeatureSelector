@@ -63,6 +63,7 @@ def read_path(path,m=0,n=-1):
 
 def indexes(X,ar):
     '''
+    
     Slices Dataframe Given as per given indexed Boolean Dataframe.
     
     Parameters
@@ -97,6 +98,24 @@ def indexes(X,ar):
     return X.iloc[:,index_array]
 
 def forward_selection(data, target, significance_level=0.05):
+    '''
+    Returns Sliced DataFrame of Dependent Variables after filtering out features through Forward Selection.
+    
+    Parameters
+    ----------
+    data : DataFrame
+        Independent Variable.
+    target : DataFrame
+        Dependent Variable.
+    significance_level : Integer, optional
+        The default is 0.05.
+
+    Returns
+    -------
+    X : DataFrame
+        Dependent Variable after slicing of False indexes.
+
+    '''
     data_replica = data
     initial_features = data.columns.tolist()
     best_features = []
