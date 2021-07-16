@@ -26,7 +26,7 @@ def read_path(path,m=0,n=-1):
     '''
     Read path of csv file and return the Dataframe of X and y (Independent and Dependent Variables).
     
-    Note : 0 indexing 
+    Note : 0 indexing considered
     
     Arguments:
         path -- absolute path of the csv file.
@@ -38,10 +38,9 @@ def read_path(path,m=0,n=-1):
         for m = 1 , n = 5
         
         X => ['b','c','d','e']
-        
-        
-    
+   
     '''
+    
     df = pd.read_csv(path)
     assert n < df.shape[1], 'n out of bounds \n\t\t\t i.e n exceeded number of columns'
         
