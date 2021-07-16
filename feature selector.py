@@ -63,7 +63,6 @@ def read_path(path,m=0,n=-1):
 
 def indexes(X,ar):
     '''
-    
     Slices Dataframe Given as per given indexed Boolean Dataframe.
     
     Parameters
@@ -86,7 +85,6 @@ def indexes(X,ar):
         
     Output :
         ['A','C','E','G']
-
     '''
     index_array = []
     c = 0
@@ -97,9 +95,9 @@ def indexes(X,ar):
     # print(index_array)
     return X.iloc[:,index_array]
 
-def forward_selection(data, target, significance_level=0.05):
+def ForwardSelector(data, target, significance_level=0.05):
     '''
-    Returns Sliced DataFrame of Dependent Variables after filtering out features through Forward Selection.
+    Implementation of Forward selection.
     
     Parameters
     ----------
@@ -113,8 +111,7 @@ def forward_selection(data, target, significance_level=0.05):
     Returns
     -------
     X : DataFrame
-        Dependent Variable after slicing of False indexes.
-
+        Dependent Variable after slicing attributes using forward selection.
     '''
     data_replica = data
     initial_features = data.columns.tolist()
@@ -138,4 +135,67 @@ def forward_selection(data, target, significance_level=0.05):
             data[i] = False
     return indexes(data_replica, pd.DataFrame(data))
 
+def ChiSquareSelector(X,y,filter_percent = 0.8):
+    '''
+    Implementation of Chi Sqaure Feature selection.    
+    
+    Parameters
+    ----------
+    X : DataFrame
+        Independent Variable.
+    y : DataFrame
+        Dependent Variable.
+    filter_percent : Float, optional
+        Percentage of attributes to be selected from X.
+        The default is 0.8.
+
+    Returns
+    -------
+    X : DataFrame
+        Dependent Variable after slicing after filtering using chi-square.
+    '''
+
+    assert filter_percent >= 0.2 , 'Filtering Percentage should be atleast 0.2 or 20% for optimum results'
+    
+    d = int(filter_percent * X.shape[1])
+    return indexes(X,pd.DataFrame(SelectKBest(score_func=chi2 , k=d).fit(X,y).get_support()))
+
+def RandomForestSelector(X,y):
+    '''
+    Implementation of Random Forest Feature selection.    
+    
+    Parameters
+    ----------
+    X : DataFrame
+        Independent Variable.
+    y : DataFrame
+        Dependent Variable.
+   
+    Returns
+    -------
+    X : DataFrame
+        Dependent Variable after slicing after filtering using Random Forest feature selector.
+    '''
+    return indexes(X, pd.DataFrame(SelectFromModel(RandomForestClassifier(random_state=0)).fit(X, y).get_support()))
+
+def LassoSelector(X,y,alpha=0.05):
+    '''
+    Implementation of Lasso Feature selection.
+  
+    Parameters
+    ----------
+    X : DataFrame
+        Independent Variable.
+    y : DataFrame
+        Dependent Variable.
+    alpha : Float, optional
+        Constant that multiplies the L1 term. The default is 0.05.
+    Returns
+    -------
+    X : DataFrame
+        Dependent Variable after slicing after filtering using Lasso feature selector.
+    '''
+    assert alpha !=0 , 'Alpha cannot be zero'
+    
+    return indexes(X, pd.DataFrame(SelectFromModel(Lasso(alpha,random_state=0)).fit(X, y).get_support()))
 
