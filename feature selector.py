@@ -63,7 +63,6 @@ def read_path(path,m=0,n=-1):
 
 def indexes(X,ar):
     '''
-    
     Slices Dataframe Given as per given indexed Boolean Dataframe.
     
     Parameters
