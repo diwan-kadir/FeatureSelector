@@ -5,17 +5,15 @@
 '''
 
 # Importing Libraries
-import numpy as np
 import pandas as pd
 
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
 from sklearn.feature_selection import SelectFromModel
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import Lasso, LogisticRegression
+from sklearn.linear_model import Lasso
 
 import statsmodels.api as sm
-from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 
 # Meta informations.
 __version__ = '1.0.3'
@@ -200,8 +198,31 @@ def LassoSelector(X,y,alpha=0.05):
     return indexes(X, pd.DataFrame(SelectFromModel(Lasso(alpha,random_state=0)).fit(X, y).get_support()))
 
 def Pipelined(X,y,alpha=0.05,filter_percent=0.8):
+    '''
+    Feature Selection Algorithms in a Pipelined Manner.
+    
+    
+    Filtering Stages
+    ----------------    
+    ChiSquare => Randome Forest => Forward Selection => Lasso
+    
+    
+    Parameters
+    ----------
+    X : DataFrame
+        Independent Variable.
+    y : DataFrame
+        Dependent Variable.
+    alpha : Float, optional
+        Constant that multiplies the L1 term.Used for Lasso The default is 0.05.
+    filter_percent : Float, optional
+        Percentage of attributes to be selected from X.Used in Chi-Square
+        The default is 0.8.
+
+    Returns
+    -------
+    X : DataFrame
+        Dependent Variable after slicing after filtering using Pipelined feature selector.
+    '''
     return LassoSelector(ForwardSelector(RandomForestSelector(ChiSquareSelector(X,y,filter_percent),y),y),y,alpha)
-
-
-
 
