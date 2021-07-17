@@ -1,4 +1,4 @@
-# feature-selector
+# FeatureSelector
 A custom feature selection program with various algorithms and their pipelined combination in an easy and descriptive way. 
 ```py
  >>> import FeatureSelector as fs
