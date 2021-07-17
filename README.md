@@ -1,9 +1,9 @@
 # feature-selector
 A custom feature selection program with various algorithms and their pipelined combination in an easy and descriptive way. 
 
->>> import FeatureSelector as fs
->>> X,y = fs.read_path('D:\Internship\dataset.csv')
->>> X,y
+ `import FeatureSelector as fs
+ X,y = fs.read_path('D:\Internship\dataset.csv')
+ X,y
 (       TSPAN6       FGR       CFH      GCLC    NIPAL3  ...    IFNGR1    SH2D2A  TNFRSF1B    ARNTL2      IBSP
 0    3.593240  0.714444  3.119220  2.464426  1.291976  ...  4.462061  0.211963  3.097346  0.179946  0.024523
 1    3.399946  0.654546  0.136111  2.003238  2.233912  ...  4.708507  0.100548  2.800072  0.076992  0.000000
@@ -29,7 +29,7 @@ A custom feature selection program with various algorithms and their pipelined c
 498    0
 499    0
 Name: 0, Length: 500, dtype: int64)
-
+`
 
 
 >>> X,y = fs.read_path('D:\Internship\data.csv')
