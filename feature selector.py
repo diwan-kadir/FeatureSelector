@@ -199,3 +199,9 @@ def LassoSelector(X,y,alpha=0.05):
     
     return indexes(X, pd.DataFrame(SelectFromModel(Lasso(alpha,random_state=0)).fit(X, y).get_support()))
 
+def Pipelined(X,y,alpha=0.05,filter_percent=0.8):
+    return LassoSelector(RandomForestSelector(ChiSqaureSelector((ForwardSelector,y),y),y),y)
+    
+    
+    
+    
