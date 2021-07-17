@@ -30,7 +30,6 @@ A custom feature selection program with various algorithms and their pipelined c
 499    0
 Name: 0, Length: 500, dtype: int64)
 
--------------------------------------------------------------------
 
 
 >>> X,y = fs.read_path('D:\Internship\data.csv')
@@ -60,7 +59,8 @@ Name: 0, Length: 500, dtype: int64)
 567    0
 568    1
 Name: diagnosis, Length: 569, dtype: int64)
---------------------------------------------------------------------------------------
+
+
 >>> X_feature_selected = fs.ForwardSelector(X,y)
 >>> X_feature_selected
        HS3ST1   TSPOAP1      CROT     CRLF1  MAPK8IP2  PRICKLE3   SLC38A5
@@ -78,7 +78,6 @@ Name: diagnosis, Length: 569, dtype: int64)
 
 [500 rows x 7 columns]
 
----------------------------------------------------------
 
 >>> X_feature_selected = fs.Pipelined(X,y)
 >>> X_feature_selected
