@@ -18,8 +18,8 @@ import statsmodels.api as sm
 
 # Meta informations.
 __version__ = '1.0.3'
-__author__ = 'Kadir Diwan'
-__author_email__ = 'diwan.kadir18@siesgst.ac.in'
+__authors__ = ['Kadir Diwan','Rajeev Bandi','Dhruv Manoj']
+__authors_email__ = ['diwan.kadir18@siesgst.ac.in','bandi.rajeev18@siesgst.ac.in','dhruvmanoj99@gmail.com']
 
 def read_path(path,m=0,n=-1):
     '''
