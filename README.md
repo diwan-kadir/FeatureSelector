@@ -1,8 +1,8 @@
 # FeatureSelector
 A custom feature selection program with various algorithms and their pipelined combination in an easy and descriptive way. 
 
-Read Path:
-\nA function to read the path of the CSV file given 
+Read Path:__
+A function to read the path of the CSV file given 
 ```py
  >>> import FeatureSelector as fs
  >>> X,y = fs.read_path('D:\Internship\dataset.csv')
