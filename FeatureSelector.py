@@ -4,7 +4,6 @@
     An Implementation of feature selection algorithm.
 '''
 
-
 # Importing Libraries
 import pandas as pd
 
@@ -16,10 +15,13 @@ from sklearn.linear_model import Lasso
 
 import statsmodels.api as sm
 
+from mlxtend.feature_selection import SequentialFeatureSelector as SFS
+from sklearn.linear_model import LinearRegression
+
 # Meta informations.
 __version__ = '1.0.3'
-__authors__ = ['Kadir Diwan','Rajeev Bandi','Dhruv Manoj']
-__authors_email__ = ['diwan.kadir18@siesgst.ac.in','bandi.rajeev18@siesgst.ac.in','dhruvmanoj99@gmail.com']
+__author__ = 'Kadir Diwan'
+__author_email__ = 'diwan.kadir18@siesgst.ac.in'
 
 def read_path(path,m=0,n=-1):
     '''
@@ -94,7 +96,7 @@ def indexes(X,ar):
     # print(index_array)
     return X.iloc[:,index_array]
 
-def ForwardSelector(data, target, significance_level=0.05):
+def ForwardSelector(X,y,k_feature_percent = 0.4):
     '''
     Implementation of Forward selection.
     
@@ -104,7 +106,7 @@ def ForwardSelector(data, target, significance_level=0.05):
         Independent Variable.
     target : DataFrame
         Dependent Variable.
-    significance_level : Integer, optional
+    k_feature_percent : Float, optional
         The default is 0.05.
 
     Returns
@@ -112,28 +114,56 @@ def ForwardSelector(data, target, significance_level=0.05):
     X : DataFrame
         Dependent Variable after slicing attributes using forward selection.
     '''
-    data_replica = data
-    initial_features = data.columns.tolist()
-    best_features = []
-    while (len(initial_features)>0):
-        remaining_features = list(set(initial_features)-set(best_features))
-        new_pval = pd.Series(index=remaining_features,dtype=float)
-        for new_column in remaining_features:
-            model = sm.OLS(target, sm.add_constant(data[best_features+[new_column]])).fit()
-            new_pval[new_column] = model.pvalues[new_column]
-        min_p_value = new_pval.min()
-        if(min_p_value<significance_level):
-            best_features.append(new_pval.idxmin())
-        else:
-            break
-    data = list(data)
-    for i in range(len(data)):
-        if data[i] in best_features:
-            data[i] = True
-        else :
-            data[i] = False
-    return indexes(data_replica, pd.DataFrame(data))
 
+    assert k_feature_percent >= 0.2 , 'Filtering Percentage should be atleast 0.2 or 20% for optimum results'
+    
+    d = int(k_feature_percent * X.shape[1])
+    return X.iloc[:,list(SFS(LinearRegression(),k_features=d,forward=True,floating=False,scoring = 'r2',cv = 0).fit(X,y).k_feature_idx_)]
+
+# =============================================================================
+# 
+# 
+# def ForwardSelector(data, target, significance_level=0.05):
+#     '''
+#     Implementation of Forward selection.
+#     
+#     Parameters
+#     ----------
+#     data : DataFrame
+#         Independent Variable.
+#     target : DataFrame
+#         Dependent Variable.
+#     significance_level : Integer, optional
+#         The default is 0.05.
+# 
+#     Returns
+#     -------
+#     X : DataFrame
+#         Dependent Variable after slicing attributes using forward selection.
+#     '''
+#     data_replica = data
+#     initial_features = data.columns.tolist()
+#     best_features = []
+#     while (len(initial_features)>0):
+#         remaining_features = list(set(initial_features)-set(best_features))
+#         new_pval = pd.Series(index=remaining_features,dtype=float)
+#         for new_column in remaining_features:
+#             model = sm.OLS(target, sm.add_constant(data[best_features+[new_column]])).fit()
+#             new_pval[new_column] = model.pvalues[new_column]
+#         min_p_value = new_pval.min()
+#         if(min_p_value<significance_level):
+#             best_features.append(new_pval.idxmin())
+#         else:
+#             break
+#     data = list(data)
+#     for i in range(len(data)):
+#         if data[i] in best_features:
+#             data[i] = True
+#         else :
+#             data[i] = False
+#     return indexes(data_replica, pd.DataFrame(data))
+# 
+# =============================================================================
 def ChiSquareSelector(X,y,filter_percent = 0.8):
     '''
     Implementation of Chi Sqaure Feature selection.    
@@ -225,5 +255,8 @@ def Pipelined(X,y,alpha=0.05,filter_percent=0.8):
     X : DataFrame
         Dependent Variable after slicing after filtering using Pipelined feature selector.
     '''
-    return LassoSelector(ForwardSelector(RandomForestSelector(ChiSquareSelector(X,y,filter_percent),y),y),y,alpha)
+    return LassoSelector(ForwardSelector(RandomForestSelector(ChiSquareSelector(X,y,filter_percent),y),y,k_feature_percent=0.4),y,alpha)
+
+
+
 
