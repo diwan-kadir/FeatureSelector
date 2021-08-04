@@ -63,6 +63,11 @@ Name: 0, Length: 500, dtype: int64)
 568    1
 Name: diagnosis, Length: 569, dtype: int64)
 ```
+Apply choice of Feature Selection algorithm <br>
+Lasso 
+Chi Square 
+Random Forest
+Forward Selection
 
 ```py
 >>> X_feature_selected = fs.ForwardSelector(X,y)
