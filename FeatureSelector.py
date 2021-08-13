@@ -19,7 +19,7 @@ from mlxtend.feature_selection import SequentialFeatureSelector as SFS
 from sklearn.linear_model import LinearRegression
 
 # Meta informations.
-__version__ = '1.0.3'
+__version__ = '1.0.5'
 __author__ = 'Kadir Diwan'
 __author_email__ = 'diwan.kadir18@siesgst.ac.in'
 
